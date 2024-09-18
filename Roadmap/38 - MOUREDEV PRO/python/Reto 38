@@ -1,0 +1,53 @@
+import csv
+import random
+
+# Función para leer el archivo CSV y filtrar usuarios activos
+def leer_usuarios_activos(ruta_csv):
+    usuarios = []
+    with open(ruta_csv, newline='') as csvfile:
+        lector = csv.DictReader(csvfile)
+        for fila in lector:
+            if fila['status'].lower() == 'activo':
+                usuarios.append({
+                    'id': fila['id'],
+                    'email': fila['email']
+                })
+    return usuarios
+
+# Función para seleccionar los ganadores
+def seleccionar_ganadores(usuarios):
+    # Seleccionamos 3 ganadores únicos de los usuarios activos
+    ganadores = random.sample(usuarios, 3)
+    
+    ganador_suscripcion = ganadores[0]
+    ganador_descuento = ganadores[1]
+    ganador_libro = ganadores[2]
+    
+    return ganador_suscripcion, ganador_descuento, ganador_libro
+
+# Función principal
+def main():
+    ruta_csv = 'usuarios.csv'  # Nombre del archivo CSV
+    
+    # Leer los usuarios activos del archivo CSV
+    usuarios_activos = leer_usuarios_activos(ruta_csv)
+    
+    # Verificar si hay menos de 3 usuarios activos
+    if len(usuarios_activos) < 3:
+        print("No hay suficientes usuarios activos para seleccionar 3 ganadores.")
+    else:
+        # Seleccionar los ganadores si hay suficientes usuarios
+        ganador_suscripcion, ganador_descuento, ganador_libro = seleccionar_ganadores(usuarios_activos)
+        
+        # Mostrar los ganadores
+        print("Ganador de la suscripción:")
+        print(f"ID: {ganador_suscripcion['id']}, Email: {ganador_suscripcion['email']}")
+        
+        print("\nGanador del descuento:")
+        print(f"ID: {ganador_descuento['id']}, Email: {ganador_descuento['email']}")
+        
+        print("\nGanador del libro:")
+        print(f"ID: {ganador_libro['id']}, Email: {ganador_libro['email']}")
+
+if __name__ == '__main__':
+    main()
